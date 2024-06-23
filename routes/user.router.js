@@ -17,7 +17,7 @@ router.post("/signup-submit", async (req, res) => {
 		password: req.body.password,
 	});
 	console.log("this is user", user);
-	res.redirect("/login");
+	res.redirect("/user/login");
 });
 
 router.get("/login", (req, res) => {

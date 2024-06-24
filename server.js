@@ -4,7 +4,7 @@ import "dotenv/config";
 import bodyParser from "body-parser";
 import userRouter from "./routes/user.router.js";
 import appRouter from "./routes/app.router.js";
-import { insertTokenIfNotExists, validateTokenOnEachRequestMiddleware } from "./middlewares/authentication.middleware.js";
+import { validateTokenOnEachRequestMiddleware } from "./middlewares/authentication.middleware.js";
 import cookieParser from "cookie-parser";
 
 connection(process.env.MONGO_URL);
@@ -23,7 +23,6 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 
 // using middleware
-// app.use(insertTokenIfNotExists);
 app.use("/app", validateTokenOnEachRequestMiddleware);
 
 //routes

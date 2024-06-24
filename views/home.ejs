@@ -22,9 +22,10 @@
             text-align: center;
         }
         nav {
+            background: #333;
             display: flex;
             justify-content: center;
-            background: #333;
+            flex-wrap: wrap;
         }
         nav a {
             color: white;
@@ -55,15 +56,31 @@
             margin-top: auto;
             max-height: 40px;
         }
-        .wall-image{
+        .wall-image {
             border-radius: 10px;
+        }
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                width: screen;
+                margin: 0;
+                padding: 0;
+            }
+            nav a {
+                text-align: center;
+            }
+        }
+        @media (max-width: 768px) {
+            img {
+                width: 320px;
+            }
         }
     </style>
 </head>
 <body>
     <header>
         <h1>Homepage</h1>
-    </header> 
+    </header>
     <nav>
         <a href="/app/home">Home</a>
         <a href="/app/about">About</a>

@@ -2,7 +2,11 @@ import express from "express";
 import { validateUserBYEmail } from "../validations/user.validate.js";
 import { generateToken } from "../services/authentication.service.js";
 import { User } from "../models/user.model.js";
-// import cookieParser from 'cookie-parser';
+import {
+	encryptPassword,
+	decryptPassword,
+} from "../services/encryption.service.js";
+import cookieParser from "cookie-parser";
 
 const router = express.Router();
 // router.use(cookieParser())
@@ -12,14 +16,19 @@ router.get("/signup", (req, res) => {
 });
 
 router.post("/signup-submit", async (req, res) => {
-	console.log(req.body);
-	const user = await User.create({
-		email: req.body.email,
-		username: req.body.username,
-		password: req.body.password,
-	});
-	console.log("this is user", user);
-	res.redirect("/user/login");
+	try {
+		const encryptedPassword = await encryptPassword(req.body.password);
+		const user = await User.create({
+			email: req.body.email,
+			username: req.body.username,
+			password: encryptedPassword,
+		});
+		console.log("this is user", user);
+		res.redirect("/user/login");
+	} catch (error) {
+		console.error("Error during signup:", error);
+		res.render("signup");
+	}
 });
 
 router.get("/login", (req, res) => {
@@ -33,15 +42,12 @@ router.post("/login-submit", async (req, res) => {
 		return res.render("login", { errorMessage: "User not found" });
 	}
 
-	const isPasswordValid = function (userPassword, requestPassword) {
-		if (userPassword == requestPassword) {
-			return true;
-		} else {
-			return false;
-		}
-	};
+	const isPasswordValid = await decryptPassword(
+		req.body.password,
+		user.password
+	);
 
-	if (isPasswordValid(user.password, req.body.password)) {
+	if (isPasswordValid) {
 		const token = generateToken(user);
 		res.cookie("token", token);
 		res.render("home");

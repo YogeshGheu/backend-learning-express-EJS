@@ -17,7 +17,7 @@ const validateTokenOnEachRequestMiddleware = async function (req, res, next) {
 			next();
 		}
 	} catch (error) {
-		return res.render("login", {errorMessage:"Token manipulated, Please login again!"})
+		return res.render("login", {errorMessage:"Session Timeout!"})
 	}
 };
 
